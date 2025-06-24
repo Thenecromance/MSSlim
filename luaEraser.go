@@ -16,14 +16,12 @@ func eraseModules() {
 
 	patterns := []Pattern{
 		{
-			//
 			FileName:    path + "/" + "Module/ApplicantPanel.lua",
 			Patterns:    "星标",
 			OffsetStart: -2,
 			OffsetEnd:   18,
 		},
 		{
-			//
 			FileName:    path + "/" + "Module/ApplicantPanel.lua",
 			Patterns:    "text = '@'",
 			OffsetStart: -2,
@@ -36,14 +34,12 @@ func eraseModules() {
 			OffsetEnd:   5,
 		},
 		{
-			//F:\World of Warcraft\_retail_\Interface\AddOns\MeetingStone\Expansion\LocomotiveIntroduce.lua
 			FileName:    path + "/" + "Expansion/LocomotiveIntroduce.lua",
 			Patterns:    "火车头",
 			OffsetStart: 0,
 			OffsetEnd:   0,
 		},
 		{
-			//F:\World of Warcraft\_retail_\Interface\AddOns\MeetingStone\Module\BrowsePanel.lua
 			FileName:    path + "/" + "Module/BrowsePanel.lua",
 			Patterns:    "火车头",
 			OffsetStart: -2,
