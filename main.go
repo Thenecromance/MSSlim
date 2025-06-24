@@ -18,7 +18,9 @@ var cleanerCmd = &cobra.Command{
 		log.Println("开始清理集合石....")
 		eraseLoadXml()
 		eraseModules()
+		blackListFolder()
 		log.Println("清理完成")
+		log.Println("如果游戏在线，请使用/rl命令重载集合石插件")
 	},
 }
 

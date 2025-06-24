@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"log"
 	"os"
 	"strings"
@@ -11,9 +12,45 @@ import (
 
 func eraseModules() {
 	log.Println("开始移除不必要的模块....")
-	eraseApplicantPanel()
 	eraseBrowsePanel()
 
+	patterns := []Pattern{
+		{
+			//
+			FileName:    path + "/" + "Module/ApplicantPanel.lua",
+			Patterns:    "星标",
+			OffsetStart: -2,
+			OffsetEnd:   18,
+		},
+		{
+			//
+			FileName:    path + "/" + "Module/ApplicantPanel.lua",
+			Patterns:    "text = '@'",
+			OffsetStart: -2,
+			OffsetEnd:   18,
+		},
+		{
+			FileName:    path + "/" + "Module/ApplicantPanel.lua",
+			Patterns:    "操作",
+			OffsetStart: -3,
+			OffsetEnd:   5,
+		},
+		{
+			//F:\World of Warcraft\_retail_\Interface\AddOns\MeetingStone\Expansion\LocomotiveIntroduce.lua
+			FileName:    path + "/" + "Expansion/LocomotiveIntroduce.lua",
+			Patterns:    "火车头",
+			OffsetStart: 0,
+			OffsetEnd:   0,
+		},
+		{
+			//F:\World of Warcraft\_retail_\Interface\AddOns\MeetingStone\Module\BrowsePanel.lua
+			FileName:    path + "/" + "Module/BrowsePanel.lua",
+			Patterns:    "火车头",
+			OffsetStart: -2,
+			OffsetEnd:   0,
+		},
+	}
+	eraseByPatterns(patterns)
 }
 
 func eraseApplicantPanel() {
@@ -102,7 +139,9 @@ func enumTables(lines []string, start int) []block {
 	needToDelete := false
 
 	for i := startLine; i < len(lines); i++ {
-		if strings.Contains(lines[i], "星标") || strings.Contains(lines[i], "'@'") || strings.Contains(lines[i], "'操作'") {
+		if strings.Contains(lines[i], "星标") ||
+			strings.Contains(lines[i], "'@'") ||
+			strings.Contains(lines[i], "'操作'") {
 			needToDelete = true
 		}
 
@@ -137,4 +176,34 @@ func enumTables(lines []string, start int) []block {
 	}
 
 	return result
+}
+
+func eraseByPatterns(patterns []Pattern) {
+	for _, pattern := range patterns {
+		buf, err := os.ReadFile(pattern.FileName)
+		if err != nil {
+			fmt.Println("读取文件失败:", err)
+			continue
+		}
+		content := string(buf)
+		lines := strings.Split(content, "\n")
+		for i, line := range lines {
+			if strings.Contains(line, pattern.Patterns) {
+				if strings.HasPrefix(line, "--") {
+					continue // already disabled
+				}
+				if pattern.OffsetStart == 0 && pattern.OffsetEnd == 0 {
+					lines[i] = "--" + lines[i] // disable the line
+				} else {
+					for idx := pattern.OffsetStart + i; idx <= i+pattern.OffsetEnd; idx++ {
+						lines[idx] = "--" + lines[idx]
+					}
+				}
+
+			}
+		}
+
+		os.WriteFile(pattern.FileName, []byte(strings.Join(lines, "\n")), 0644)
+	}
+
 }

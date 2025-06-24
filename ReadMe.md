@@ -18,7 +18,6 @@ what the plugin looks like after removing unnecessary files
 
 or just modified the app.bat 
 ```bat
-
 MSSlim.exe --path "Input your plugin folder here"
 pause
 ```
