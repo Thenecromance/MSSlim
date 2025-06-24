@@ -3,8 +3,9 @@ package main
 import (
 	"github.com/spf13/cobra"
 	"log"
-	"time"
 )
+
+const Version = "1.0.1"
 
 var path string
 var warning = "注意：该exe仅为个人使用， 不对任何人负责，使用前请备份集合石插件的文件\n" +
@@ -14,13 +15,16 @@ var cleanerCmd = &cobra.Command{
 	Long:  "去除集合石中不必要的内容",
 	Run: func(cmd *cobra.Command, args []string) {
 		log.Println(warning)
-		time.Sleep(3 * time.Second)
+		log.Println("集合石清理工具版本:", Version)
 		log.Println("开始清理集合石....")
+		defer func() {
+			log.Println("清理完成")
+			log.Println("如果游戏在线，请使用/rl命令重载集合石插件")
+		}()
 		eraseLoadXml()
 		eraseModules()
 		blackListFolder()
-		log.Println("清理完成")
-		log.Println("如果游戏在线，请使用/rl命令重载集合石插件")
+
 	},
 }
 
